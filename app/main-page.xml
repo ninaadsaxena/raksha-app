@@ -49,7 +49,7 @@
         <!-- Settings Panel -->
         <StackLayout row="3" class="{{ showSettings ? 'settings-panel visible' : 'settings-panel hidden' }}">
             <Button text="{{ t.changePassword }}" tap="{{ onChangePassword }}" class="btn btn-setting" />
-            <Button text="{{ t.language }}: {{ currentLanguage === 'en' ? 'English' : 'हिंदी' }}" 
+            <Button text="{{ t.language }}: {{ currentLanguage == 'en' ? 'English' : 'हिंदी' }}" 
                     tap="{{ switchLanguage }}" class="btn btn-setting" />
         </StackLayout>
 
