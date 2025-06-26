@@ -1,0 +1,71 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="onNavigatingTo" class="page">
+    <ActionBar class="action-bar">
+        <Label text="{{ isRakshaMode ? t.rakshaTitle : t.appTitle }}" class="action-bar-title" />
+        <ActionItem tap="{{ onSettings }}" ios.position="right" android.position="actionBar" visibility="{{ isRakshaMode ? 'visible' : 'collapsed' }}">
+            <Label text="⚙️" class="action-item-label" />
+        </ActionItem>
+    </ActionBar>
+    
+    <GridLayout rows="auto, auto, *, auto" class="main-container">
+        <!-- Calculator Display -->
+        <StackLayout row="0" class="display-container">
+            <Label text="{{ expression }}" class="expression-text" textWrap="false" visibility="{{ expression ? 'visible' : 'collapsed' }}" />
+            <Label text="{{ display }}" class="display-text" textWrap="false" />
+        </StackLayout>
+        
+        <!-- Calculator Buttons -->
+        <GridLayout row="2" columns="*, *, *, *" rows="*, *, *, *, *" class="button-grid">
+            <!-- Row 1: Clear, +/-, %, Divide -->
+            <Button row="0" col="0" text="C" tap="{{ onClear }}" class="btn btn-function" />
+            <Button row="0" col="1" text="⌫" tap="{{ onBackspace }}" class="btn btn-function" />
+            <Button row="0" col="2" text=" " class="btn btn-empty" />
+            <Button row="0" col="3" text="÷" tap="{{ onOperator }}" class="btn btn-operator" />
+            
+            <!-- Row 2: 7, 8, 9, Multiply -->
+            <Button row="1" col="0" text="7" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="1" col="1" text="8" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="1" col="2" text="9" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="1" col="3" text="×" tap="{{ onOperator }}" class="btn btn-operator" />
+            
+            <!-- Row 3: 4, 5, 6, Subtract -->
+            <Button row="2" col="0" text="4" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="2" col="1" text="5" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="2" col="2" text="6" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="2" col="3" text="-" tap="{{ onOperator }}" class="btn btn-operator" />
+            
+            <!-- Row 4: 1, 2, 3, Add -->
+            <Button row="3" col="0" text="1" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="3" col="1" text="2" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="3" col="2" text="3" tap="{{ onNumber }}" class="btn btn-number" />
+            <Button row="3" col="3" text="+" tap="{{ onOperator }}" class="btn btn-operator" />
+            
+            <!-- Row 5: 0, Decimal, Empty, Equals -->
+            <Button row="4" col="0" text="0" tap="{{ onNumber }}" class="btn btn-number btn-zero" />
+            <Button row="4" col="1" text="." tap="{{ onDecimal }}" class="btn btn-number" />
+            <Button row="4" col="2" text=" " class="btn btn-empty" />
+            <Button row="4" col="3" text="=" tap="{{ onEqual }}" class="btn btn-equals" />
+        </GridLayout>
+
+        <!-- Settings Panel -->
+        <StackLayout row="3" class="{{ showSettings ? 'settings-panel visible' : 'settings-panel hidden' }}">
+            <Button text="{{ t.language }}: {{ currentLanguage === 'en' ? 'English' : 'हिंदी' }}" 
+                    tap="{{ switchLanguage }}" class="btn btn-setting" />
+        </StackLayout>
+
+        <!-- Raksha Help Section -->
+        <ScrollView row="0" rowSpan="4" class="{{ showHelp ? 'help-overlay visible' : 'help-overlay hidden' }}">
+            <StackLayout class="help-container">
+                <Label text="{{ t.rakshaTitle }}" class="help-title" />
+                
+                <Button text="{{ t.emergencySOS }}" tap="{{ onSOS }}" class="help-btn btn-sos" />
+                <Button text="{{ t.nearestShelters }}" tap="{{ onFindShelters }}" class="help-btn btn-shelter" />
+                <Button text="{{ t.legalHelp }}" tap="{{ onLegalHelp }}" class="help-btn btn-legal" />
+                <Button text="{{ t.counselingServices }}" tap="{{ onCounseling }}" class="help-btn btn-counseling" />
+                <Button text="{{ t.emergencyContacts }}" tap="{{ onContacts }}" class="help-btn btn-contacts" />
+                <Button text="{{ t.quickExit }}" tap="{{ onQuickExit }}" class="help-btn btn-exit" />
+                
+                <Label text="🔒 {{ t.quickExit }}" class="help-instruction" textWrap="true" />
+            </StackLayout>
+        </ScrollView>
+    </GridLayout>
+</Page>

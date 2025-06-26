@@ -1,0 +1,351 @@
+/* Base Styles */
+.page {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.action-bar {
+    background: linear-gradient(135deg, #6a4c93 0%, #9b59b6 100%);
+    color: white;
+    border-bottom-width: 0;
+}
+
+.action-bar-title {
+    color: white;
+    font-size: 20;
+    font-weight: 600;
+    text-align: center;
+}
+
+.action-item-label {
+    color: white;
+    font-size: 18;
+    padding: 8;
+}
+
+.main-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    margin: 0;
+}
+
+/* Display Styles */
+.display-container {
+    background: linear-gradient(135deg, #6a4c93 0%, #9b59b6 100%);
+    padding: 30 20 20 20;
+    margin: 0;
+    min-height: 120;
+}
+
+.expression-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18;
+    font-weight: 300;
+    text-align: right;
+    margin-bottom: 5;
+}
+
+.display-text {
+    color: white;
+    font-size: 48;
+    font-weight: 200;
+    text-align: right;
+    letter-spacing: 1;
+    min-height: 60;
+}
+
+/* Button Grid */
+.button-grid {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 20 16;
+    margin: 0;
+}
+
+/* Button Base Styles */
+.btn {
+    margin: 6;
+    border-radius: 50%;
+    font-size: 28;
+    font-weight: 400;
+    border-width: 0;
+    width: 70;
+    height: 70;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* Number Buttons */
+.btn-number {
+    background-color: #c8a2c8;
+    color: #1a1a2e;
+}
+
+.btn-number:active {
+    background-color: #b894b8;
+}
+
+/* Operator Buttons */
+.btn-operator {
+    background-color: #9b59b6;
+    color: white;
+}
+
+.btn-operator:active {
+    background-color: #8e44ad;
+}
+
+/* Function Buttons */
+.btn-function {
+    background-color: #6c5ce7;
+    color: white;
+}
+
+.btn-function:active {
+    background-color: #5f3dc4;
+}
+
+/* Equals Button */
+.btn-equals {
+    background-color: #9b59b6;
+    color: white;
+}
+
+.btn-equals:active {
+    background-color: #8e44ad;
+}
+
+/* Empty/Disabled Buttons */
+.btn-empty {
+    background-color: transparent;
+    border-width: 0;
+    opacity: 0;
+}
+
+/* Zero Button */
+.btn-zero {
+    /* Same styling as other number buttons */
+}
+
+/* Settings Panel */
+.settings-panel {
+    background: linear-gradient(135deg, #6a4c93 0%, #9b59b6 100%);
+    padding: 16;
+    border-top-width: 1;
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.settings-panel.hidden {
+    opacity: 0;
+    visibility: collapse;
+    height: 0;
+}
+
+.settings-panel.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-setting {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    margin: 4;
+    border-radius: 12;
+    font-size: 16;
+    padding: 12;
+    border-width: 1;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-setting:active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Help Overlay */
+.help-overlay {
+    background-color: rgba(26, 26, 46, 0.95);
+    z-index: 1000;
+}
+
+.help-overlay.hidden {
+    opacity: 0;
+    visibility: collapse;
+}
+
+.help-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.help-container {
+    padding: 30;
+    margin: 20;
+    background: linear-gradient(135deg, #6a4c93 0%, #9b59b6 100%);
+    border-radius: 20;
+    border-width: 2;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.help-title {
+    font-size: 28;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 30;
+}
+
+.help-btn {
+    margin: 8 0;
+    padding: 18;
+    border-radius: 16;
+    font-size: 18;
+    font-weight: 600;
+    border-width: 2;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.help-btn:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+}
+
+.btn-sos {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-sos:active {
+    background-color: #c0392b;
+}
+
+.btn-shelter {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-shelter:active {
+    background-color: #2980b9;
+}
+
+.btn-legal {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-legal:active {
+    background-color: #229954;
+}
+
+.btn-counseling {
+    background-color: #f39c12;
+    color: white;
+}
+
+.btn-counseling:active {
+    background-color: #e67e22;
+}
+
+.btn-contacts {
+    background-color: #e67e22;
+    color: white;
+}
+
+.btn-contacts:active {
+    background-color: #d35400;
+}
+
+.btn-exit {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-exit:active {
+    background-color: #7f8c8d;
+}
+
+.help-instruction {
+    font-size: 16;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    margin-top: 20;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 320) {
+    .display-text {
+        font-size: 36;
+    }
+    
+    .btn {
+        font-size: 24;
+        width: 60;
+        height: 60;
+    }
+    
+    .help-btn {
+        font-size: 16;
+        padding: 14;
+    }
+}
+
+/* Dark Mode Enhancements */
+.ns-dark .page {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.ns-dark .main-container {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.ns-dark .button-grid {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.ns-dark .btn-number {
+    background-color: #a67ca6;
+    color: #0a0a0a;
+}
+
+.ns-dark .btn-number:active {
+    background-color: #956b95;
+}
+
+/* Animation Classes */
+.fade-in {
+    animation-name: fadeIn;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+.fade-out {
+    animation-name: fadeOut;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.9); }
+}
+
+/* Button Press Animation */
+.btn-press {
+    animation-name: buttonPress;
+    animation-duration: 0.1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes buttonPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
