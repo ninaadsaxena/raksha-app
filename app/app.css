@@ -125,11 +125,6 @@
     opacity: 0;
 }
 
-/* Zero Button */
-.btn-zero {
-    /* Same styling as other number buttons */
-}
-
 /* Settings Panel */
 .settings-panel {
     background: linear-gradient(135deg, #6a4c93 0%, #9b59b6 100%);
@@ -272,46 +267,6 @@
     text-align: center;
     margin-top: 20;
     font-style: italic;
-}
-
-/* Responsive Design */
-@media (max-width: 320) {
-    .display-text {
-        font-size: 36;
-    }
-    
-    .btn {
-        font-size: 24;
-        width: 60;
-        height: 60;
-    }
-    
-    .help-btn {
-        font-size: 16;
-        padding: 14;
-    }
-}
-
-/* Dark Mode Enhancements */
-.ns-dark .page {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-}
-
-.ns-dark .main-container {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-}
-
-.ns-dark .button-grid {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-}
-
-.ns-dark .btn-number {
-    background-color: #a67ca6;
-    color: #0a0a0a;
-}
-
-.ns-dark .btn-number:active {
-    background-color: #956b95;
 }
 
 /* Animation Classes */

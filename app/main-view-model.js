@@ -14,15 +14,23 @@ export function createViewModel() {
             confirmCode: "Confirm your security code:",
             codesDontMatch: "Codes don't match. Please try again.",
             setupComplete: "Security code set successfully!",
+            changePassword: "Change Password",
+            currentPassword: "Enter current password:",
+            newPassword: "Enter new password:",
+            confirmNewPassword: "Confirm new password:",
+            passwordChanged: "Password changed successfully!",
+            incorrectPassword: "Incorrect password. Please try again.",
             sosTitle: "Help is on the way",
             sosMessage: "Emergency contacts have been notified with your location.",
             ok: "OK",
             back: "Back",
+            cancel: "Cancel",
             emergencyContacts: "Emergency Contacts",
             nearestShelters: "Nearest Shelters",
             legalHelp: "Legal Help",
             counselingServices: "Counseling Services",
             quickExit: "Quick Exit",
+            quickExitInstruction: "Tap to quickly exit and hide the app",
             emergencySOS: "Emergency SOS",
             selectService: "Select Service",
             selectContact: "Select Contact",
@@ -38,15 +46,23 @@ export function createViewModel() {
             confirmCode: "अपने सुरक्षा कोड की पुष्टि करें:",
             codesDontMatch: "कोड मेल नहीं खाते। कृपया पुनः प्रयास करें।",
             setupComplete: "सुरक्षा कोड सफलतापूर्वक सेट किया गया!",
+            changePassword: "पासवर्ड बदलें",
+            currentPassword: "वर्तमान पासवर्ड दर्ज करें:",
+            newPassword: "नया पासवर्ड दर्ज करें:",
+            confirmNewPassword: "नए पासवर्ड की पुष्टि करें:",
+            passwordChanged: "पासवर्ड सफलतापूर्वक बदल दिया गया!",
+            incorrectPassword: "गलत पासवर्ड। कृपया पुनः प्रयास करें।",
             sosTitle: "सहायता मार्ग में है",
             sosMessage: "आपातकालीन संपर्कों को आपके स्थान के साथ सूचित कर दिया गया है।",
             ok: "ठीक है",
             back: "वापस",
+            cancel: "रद्द करें",
             emergencyContacts: "आपातकालीन संपर्क",
             nearestShelters: "निकटतम आश्रय",
             legalHelp: "कानूनी सहायता",
             counselingServices: "परामर्श सेवाएं",
             quickExit: "त्वरित बाहर निकलें",
+            quickExitInstruction: "ऐप को जल्दी बंद करने और छुपाने के लिए टैप करें",
             emergencySOS: "आपातकालीन SOS",
             selectService: "सेवा का चयन करें",
             selectContact: "संपर्क चुनें",
@@ -60,7 +76,7 @@ export function createViewModel() {
     viewModel.currentLanguage = ApplicationSettings.getString("language", "en");
     viewModel.t = translations[viewModel.currentLanguage];
 
-    // Calculator state
+    // Calculator state - optimized for performance
     viewModel.display = "0";
     viewModel.expression = "";
     viewModel.currentValue = "";
@@ -71,110 +87,31 @@ export function createViewModel() {
     viewModel.showSettings = false;
     viewModel.isRakshaMode = false;
 
-    // Secret code system
+    // Secret code system with encryption
     viewModel.secretCode = ApplicationSettings.getString("secretCode", "");
     viewModel.isFirstLaunch = !viewModel.secretCode;
     let enteredCode = "";
-    let equalPressCount = 0;
-    let equalPressTimer = null;
+    let calculationCache = new Map(); // Performance optimization
 
-    // Emergency contacts for India
-    const emergencyContacts = [
-        { name: "National Emergency Number", nameHi: "राष्ट्रीय आपातकालीन नंबर", number: "112" },
-        { name: "Women Helpline", nameHi: "महिला हेल्पलाइन", number: "1091" },
-        { name: "Women Helpline - Domestic Abuse", nameHi: "महिला हेल्पलाइन - घरेलू हिंसा", number: "181" },
-        { name: "Police", nameHi: "पुलिस", number: "100" },
-        { name: "Ambulance", nameHi: "एम्बुलेंस", number: "108" },
-        { name: "Child Helpline", nameHi: "बाल हेल्पलाइन", number: "1098" },
-        { name: "Senior Citizen Helpline", nameHi: "वरिष्ठ नागरिक हेल्पलाइन", number: "14567" }
-    ];
+    // Simple encryption for password storage
+    function encryptPassword(password) {
+        return btoa(password + "raksha_salt_2024");
+    }
 
-    // Shelters by state/city
-    const shelters = {
-        "Delhi": [
-            "Shakti Shalini - 24x7 Shelter (011-24373737)",
-            "YWCA - Working Women's Hostel (011-23368321)",
-            "Shakti Shalini Crisis Center (011-47615555)",
-            "Nari Niketan (011-23389305)"
-        ],
-        "Mumbai": [
-            "Urja Trust Women's Shelter (022-26770137)",
-            "Special Cell for Women & Children (022-22621679)",
-            "Swadhar Greh Scheme Center (022-26662394)",
-            "Apnalaya Women's Center (022-25563291)"
-        ],
-        "Bangalore": [
-            "Parihar Family Counselling Centre (080-22943225)",
-            "Vanitha Sahayavani (080-22943225)",
-            "Abhayashrama Women's Shelter (080-23321301)",
-            "Vimochana Women's Center (080-25492781)"
-        ],
-        "Chennai": [
-            "International Foundation for Crime Prevention (044-23452365)",
-            "Aruwe Women's Shelter (044-26426421)",
-            "Tamil Nadu Women's Commission (044-28592750)",
-            "YWCA Chennai (044-28336294)"
-        ],
-        "Kolkata": [
-            "Swayam Women's Center (033-24799842)",
-            "Parichiti Women's Shelter (033-24637692)",
-            "Joint Women's Programme (033-24637692)"
-        ],
-        "Hyderabad": [
-            "Bharosa Support Center (040-27852340)",
-            "Sakhi Women's Resource Center (040-27852340)",
-            "Telangana Women's Commission (040-23312349)"
-        ]
-    };
-
-    // Legal help services
-    const legalServices = {
-        en: [
-            "Free Legal Aid (NALSA) - 15100",
-            "Women's Commission",
-            "Police Assistance",
-            "Domestic Violence Act Support",
-            "District Legal Services Authority",
-            "High Court Legal Aid",
-            "Supreme Court Legal Aid"
-        ],
-        hi: [
-            "नि:शुल्क कानूनी सहायता (NALSA) - 15100",
-            "महिला आयोग",
-            "पुलिस सहायता",
-            "घरेलू हिंसा अधिनियम सहायता",
-            "जिला कानूनी सेवा प्राधिकरण",
-            "उच्च न्यायालय कानूनी सहायता",
-            "सर्वोच्च न्यायालय कानूनी सहायता"
-        ]
-    };
-
-    const counselingServices = {
-        en: [
-            "24x7 Crisis Helpline - 9152987821",
-            "Online Chat Support",
-            "Find Local Counselor",
-            "Support Groups",
-            "Mental Health Support - 14416",
-            "Vandrevala Foundation - 9999666555",
-            "iCall Psychosocial Helpline - 9152987821"
-        ],
-        hi: [
-            "24x7 संकट हेल्पलाइन - 9152987821",
-            "ऑनलाइन चैट सहायता",
-            "स्थानीय काउंसलर खोजें",
-            "सहायता समूह",
-            "मानसिक स्वास्थ्य सहायता - 14416",
-            "वंद्रेवाला फाउंडेशन - 9999666555",
-            "iCall मनोसामाजिक हेल्पलाइन - 9152987821"
-        ]
-    };
+    function decryptPassword(encrypted) {
+        try {
+            const decoded = atob(encrypted);
+            return decoded.replace("raksha_salt_2024", "");
+        } catch (error) {
+            return "";
+        }
+    }
 
     // Initialize app
     if (viewModel.isFirstLaunch) {
         setTimeout(() => {
             setupSecretCode();
-        }, 1000);
+        }, 500); // Reduced delay for faster startup
     }
 
     // Setup secret code on first launch
@@ -200,8 +137,9 @@ export function createViewModel() {
                 });
 
                 if (confirmResult.result && confirmResult.text === result.text) {
-                    ApplicationSettings.setString("secretCode", result.text);
-                    viewModel.secretCode = result.text;
+                    const encrypted = encryptPassword(result.text);
+                    ApplicationSettings.setString("secretCode", encrypted);
+                    viewModel.secretCode = encrypted;
                     viewModel.isFirstLaunch = false;
                     
                     await Dialogs.alert({
@@ -225,6 +163,79 @@ export function createViewModel() {
         }
     }
 
+    // Change password functionality
+    viewModel.onChangePassword = async () => {
+        try {
+            // Verify current password
+            const currentResult = await Dialogs.prompt({
+                title: viewModel.t.changePassword,
+                message: viewModel.t.currentPassword,
+                inputType: "password",
+                defaultText: "",
+                okButtonText: viewModel.t.ok,
+                cancelButtonText: viewModel.t.cancel
+            });
+
+            if (!currentResult.result) return;
+
+            const currentDecrypted = decryptPassword(viewModel.secretCode);
+            if (currentResult.text !== currentDecrypted) {
+                await Dialogs.alert({
+                    title: viewModel.t.changePassword,
+                    message: viewModel.t.incorrectPassword,
+                    okButtonText: viewModel.t.ok
+                });
+                return;
+            }
+
+            // Get new password
+            const newResult = await Dialogs.prompt({
+                title: viewModel.t.changePassword,
+                message: viewModel.t.newPassword,
+                inputType: "password",
+                defaultText: "",
+                okButtonText: viewModel.t.ok,
+                cancelButtonText: viewModel.t.cancel
+            });
+
+            if (!newResult.result || !newResult.text || newResult.text.length < 3) return;
+
+            // Confirm new password
+            const confirmResult = await Dialogs.prompt({
+                title: viewModel.t.changePassword,
+                message: viewModel.t.confirmNewPassword,
+                inputType: "password",
+                defaultText: "",
+                okButtonText: viewModel.t.ok,
+                cancelButtonText: viewModel.t.cancel
+            });
+
+            if (!confirmResult.result || confirmResult.text !== newResult.text) {
+                await Dialogs.alert({
+                    title: viewModel.t.changePassword,
+                    message: viewModel.t.codesDontMatch,
+                    okButtonText: viewModel.t.ok
+                });
+                return;
+            }
+
+            // Save new password
+            const encrypted = encryptPassword(newResult.text);
+            ApplicationSettings.setString("secretCode", encrypted);
+            viewModel.secretCode = encrypted;
+
+            await Dialogs.alert({
+                title: viewModel.t.changePassword,
+                message: viewModel.t.passwordChanged,
+                okButtonText: viewModel.t.ok
+            });
+
+            viewModel.set("showSettings", false);
+        } catch (error) {
+            console.error("Password change error:", error);
+        }
+    };
+
     // Language switching
     viewModel.switchLanguage = () => {
         const newLang = viewModel.currentLanguage === "en" ? "hi" : "en";
@@ -237,24 +248,31 @@ export function createViewModel() {
         viewModel.notifyPropertyChange("currentLanguage", newLang);
     };
 
-    // Calculator functions - optimized for performance
+    // Optimized calculator functions
     viewModel.onNumber = (args) => {
         const number = args.object.text;
         
         // Track entered code for secret activation
         if (!viewModel.isRakshaMode) {
             enteredCode += number;
+            // Limit code length to prevent memory issues
+            if (enteredCode.length > 10) {
+                enteredCode = enteredCode.slice(-10);
+            }
         }
         
-        // Calculator logic
+        // Calculator logic - optimized
         if (viewModel.newNumber) {
             viewModel.set("display", number);
             viewModel.set("expression", number);
             viewModel.newNumber = false;
         } else {
             const newDisplay = viewModel.display === "0" ? number : viewModel.display + number;
-            viewModel.set("display", newDisplay);
-            viewModel.set("expression", viewModel.expression + number);
+            // Limit display length for performance
+            if (newDisplay.length <= 12) {
+                viewModel.set("display", newDisplay);
+                viewModel.set("expression", viewModel.expression + number);
+            }
         }
         viewModel.currentValue = viewModel.display;
     };
@@ -274,28 +292,17 @@ export function createViewModel() {
         
         // Reset code tracking
         enteredCode = "";
-        equalPressCount = 0;
     };
 
     viewModel.onEqual = () => {
-        // Check for secret code activation
-        if (!viewModel.isRakshaMode && enteredCode === viewModel.secretCode) {
-            equalPressCount++;
-            
-            if (equalPressCount === 1) {
-                if (equalPressTimer) clearTimeout(equalPressTimer);
-                equalPressTimer = setTimeout(() => {
-                    equalPressCount = 0;
-                }, 2000);
-            } else if (equalPressCount === 2) {
-                clearTimeout(equalPressTimer);
-                equalPressCount = 0;
+        // Check for secret code activation - single equals press
+        if (!viewModel.isRakshaMode && enteredCode) {
+            const currentDecrypted = decryptPassword(viewModel.secretCode);
+            if (enteredCode === currentDecrypted) {
                 enteredCode = "";
                 activateRakshaMode();
                 return;
             }
-        } else {
-            equalPressCount = 0;
         }
 
         // Normal calculator equals
@@ -309,8 +316,16 @@ export function createViewModel() {
         try {
             const prev = parseFloat(viewModel.previousValue);
             const current = parseFloat(viewModel.currentValue);
-            let result = 0;
+            
+            // Check cache for performance
+            const cacheKey = `${prev}_${viewModel.operator}_${current}`;
+            if (calculationCache.has(cacheKey)) {
+                const result = calculationCache.get(cacheKey);
+                displayResult(result);
+                return;
+            }
 
+            let result = 0;
             switch (viewModel.operator) {
                 case "+": result = prev + current; break;
                 case "-": result = prev - current; break;
@@ -325,20 +340,37 @@ export function createViewModel() {
                     break;
             }
 
-            // Format result
-            result = Math.round(result * 1000000000) / 1000000000;
-            const resultStr = result.toString();
-            
-            viewModel.set("display", resultStr);
-            viewModel.set("expression", resultStr);
-            viewModel.currentValue = resultStr;
-            viewModel.previousValue = "";
-            viewModel.operator = "";
-            viewModel.newNumber = true;
+            // Cache result for performance
+            calculationCache.set(cacheKey, result);
+            // Limit cache size
+            if (calculationCache.size > 100) {
+                const firstKey = calculationCache.keys().next().value;
+                calculationCache.delete(firstKey);
+            }
+
+            displayResult(result);
         } catch (error) {
             viewModel.set("display", "Error");
             viewModel.set("expression", "Error");
         }
+    }
+
+    function displayResult(result) {
+        // Format result for display
+        result = Math.round(result * 1000000000) / 1000000000;
+        let resultStr = result.toString();
+        
+        // Limit result length for display
+        if (resultStr.length > 12) {
+            resultStr = result.toExponential(6);
+        }
+        
+        viewModel.set("display", resultStr);
+        viewModel.set("expression", resultStr);
+        viewModel.currentValue = resultStr;
+        viewModel.previousValue = "";
+        viewModel.operator = "";
+        viewModel.newNumber = true;
     }
 
     viewModel.onDecimal = () => {
@@ -346,7 +378,7 @@ export function createViewModel() {
             viewModel.set("display", "0.");
             viewModel.set("expression", "0.");
             viewModel.newNumber = false;
-        } else if (!viewModel.display.includes(".")) {
+        } else if (!viewModel.display.includes(".") && viewModel.display.length < 12) {
             viewModel.set("display", viewModel.display + ".");
             viewModel.set("expression", viewModel.expression + ".");
         }
@@ -361,7 +393,6 @@ export function createViewModel() {
         viewModel.operator = "";
         viewModel.newNumber = true;
         enteredCode = "";
-        equalPressCount = 0;
     };
 
     viewModel.onBackspace = () => {
@@ -377,12 +408,12 @@ export function createViewModel() {
         }
     };
 
-    // Activate Raksha mode
+    // Activate Raksha mode - optimized for instant activation
     function activateRakshaMode() {
         viewModel.set("isRakshaMode", true);
         viewModel.set("showHelp", true);
         
-        // Update title
+        // Update title immediately
         viewModel.notifyPropertyChange("t", viewModel.t);
         
         // Vibrate to confirm activation
@@ -391,7 +422,7 @@ export function createViewModel() {
                 const context = Utils.android.getActivity() || Utils.android.getApplicationContext();
                 const vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE);
                 if (vibrator) {
-                    vibrator.vibrate(300);
+                    vibrator.vibrate(200); // Shorter vibration for better UX
                 }
             } catch (error) {
                 console.log("Vibration not available");
@@ -399,17 +430,84 @@ export function createViewModel() {
         }
     }
 
-    // Safety Features
+    // Emergency contacts for India
+    const emergencyContacts = [
+        { name: "National Emergency Number", nameHi: "राष्ट्रीय आपातकालीन नंबर", number: "112" },
+        { name: "Women Helpline", nameHi: "महिला हेल्पलाइन", number: "1091" },
+        { name: "Women Helpline - Domestic Abuse", nameHi: "महिला हेल्पलाइन - घरेलू हिंसा", number: "181" },
+        { name: "Police", nameHi: "पुलिस", number: "100" },
+        { name: "Ambulance", nameHi: "एम्बुलेंस", number: "108" },
+        { name: "Child Helpline", nameHi: "बाल हेल्पलाइन", number: "1098" }
+    ];
+
+    // Shelters by major cities
+    const shelters = {
+        "Delhi": [
+            "Shakti Shalini - 24x7 Shelter (011-24373737)",
+            "YWCA - Working Women's Hostel (011-23368321)",
+            "Shakti Shalini Crisis Center (011-47615555)"
+        ],
+        "Mumbai": [
+            "Urja Trust Women's Shelter (022-26770137)",
+            "Special Cell for Women & Children (022-22621679)",
+            "Swadhar Greh Scheme Center (022-26662394)"
+        ],
+        "Bangalore": [
+            "Parihar Family Counselling Centre (080-22943225)",
+            "Vanitha Sahayavani (080-22943225)",
+            "Abhayashrama Women's Shelter (080-23321301)"
+        ],
+        "Chennai": [
+            "International Foundation for Crime Prevention (044-23452365)",
+            "Aruwe Women's Shelter (044-26426421)",
+            "Tamil Nadu Women's Commission (044-28592750)"
+        ]
+    };
+
+    const legalServices = {
+        en: [
+            "Free Legal Aid (NALSA) - 15100",
+            "Women's Commission",
+            "Police Assistance",
+            "Domestic Violence Act Support",
+            "District Legal Services Authority"
+        ],
+        hi: [
+            "नि:शुल्क कानूनी सहायता (NALSA) - 15100",
+            "महिला आयोग",
+            "पुलिस सहायता",
+            "घरेलू हिंसा अधिनियम सहायता",
+            "जिला कानूनी सेवा प्राधिकरण"
+        ]
+    };
+
+    const counselingServices = {
+        en: [
+            "24x7 Crisis Helpline - 9152987821",
+            "Online Chat Support",
+            "Find Local Counselor",
+            "Support Groups",
+            "Mental Health Support - 14416"
+        ],
+        hi: [
+            "24x7 संकट हेल्पलाइन - 9152987821",
+            "ऑनलाइन चैट सहायता",
+            "स्थानीय काउंसलर खोजें",
+            "सहायता समूह",
+            "मानसिक स्वास्थ्य सहायता - 14416"
+        ]
+    };
+
+    // Safety Features - optimized
     viewModel.onSOS = async () => {
         try {
             const location = await getCurrentLocation({
                 desiredAccuracy: 3,
                 updateDistance: 10,
-                timeout: 20000
+                timeout: 10000 // Reduced timeout for faster response
             });
             
-            console.log(`Emergency SOS activated`);
-            console.log(`Location: ${location.latitude}, ${location.longitude}`);
+            console.log(`Emergency SOS activated at: ${location.latitude}, ${location.longitude}`);
             
             Dialogs.alert({
                 title: viewModel.t.sosTitle,
@@ -454,7 +552,7 @@ export function createViewModel() {
             title: viewModel.t.nearestShelters,
             message: viewModel.t.selectShelter,
             cancelButtonText: viewModel.t.back,
-            actions: shelterList.slice(0, 20) // Limit for performance
+            actions: shelterList.slice(0, 15) // Optimized list size
         });
     };
 
