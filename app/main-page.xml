@@ -18,7 +18,7 @@
             <!-- Row 1: Clear, Backspace, Empty, Divide -->
             <Button row="0" col="0" text="C" tap="{{ onClear }}" class="btn btn-function" />
             <Button row="0" col="1" text="⌫" tap="{{ onBackspace }}" class="btn btn-function" />
-            <Button row="0" col="2" text=" " class="btn btn-empty" />
+            <Button row="0" col="2" text="" class="btn btn-empty" />
             <Button row="0" col="3" text="÷" tap="{{ onOperator }}" class="btn btn-operator" />
             
             <!-- Row 2: 7, 8, 9, Multiply -->
@@ -42,7 +42,7 @@
             <!-- Row 5: 0, Decimal, Empty, Equals -->
             <Button row="4" col="0" text="0" tap="{{ onNumber }}" class="btn btn-number" />
             <Button row="4" col="1" text="." tap="{{ onDecimal }}" class="btn btn-number" />
-            <Button row="4" col="2" text=" " class="btn btn-empty" />
+            <Button row="4" col="2" text="" class="btn btn-empty" />
             <Button row="4" col="3" text="=" tap="{{ onEqual }}" class="btn btn-equals" />
         </GridLayout>
 
