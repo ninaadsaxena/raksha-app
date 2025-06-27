@@ -8,7 +8,8 @@ export function createViewModel() {
     const translations = {
         en: {
             appTitle: "Safe Calculator",
-            rakshaTitle: "Raksha App",
+            rakshaTitle: "Raksha",
+            rakshaSubtitle: "Your safety companion - discreet help when you need it most",
             setupTitle: "Setup Security Code",
             setupMessage: "Enter a 3-4 digit security code to access emergency features:",
             confirmCode: "Confirm your security code:",
@@ -20,18 +21,18 @@ export function createViewModel() {
             confirmNewPassword: "Confirm new password:",
             passwordChanged: "Password changed successfully!",
             incorrectPassword: "Incorrect password. Please try again.",
-            sosTitle: "Help is on the way",
-            sosMessage: "Emergency contacts have been notified with your location.",
+            sosTitle: "Emergency Alert Sent",
+            sosMessage: "Emergency contacts have been notified with your location. Help is on the way.",
             ok: "OK",
             back: "Back",
             cancel: "Cancel",
-            emergencyContacts: "Emergency Contacts",
-            nearestShelters: "Nearest Shelters",
-            legalHelp: "Legal Help",
-            counselingServices: "Counseling Services",
-            quickExit: "Quick Exit",
-            quickExitInstruction: "Tap to quickly exit and hide the app",
-            emergencySOS: "Emergency SOS",
+            emergencyContacts: "Emergency\nContacts",
+            nearestShelters: "Nearest\nShelters",
+            legalHelp: "Legal\nHelp",
+            counselingServices: "Counseling\nServices",
+            quickExit: "Quick\nExit",
+            quickExitInstruction: "Tap Quick Exit to immediately hide the app and return to home screen",
+            emergencySOS: "Emergency\nSOS",
             selectService: "Select Service",
             selectContact: "Select Contact",
             selectShelter: "Select Shelter",
@@ -40,7 +41,8 @@ export function createViewModel() {
         },
         hi: {
             appTitle: "सेफ कैलकुलेटर",
-            rakshaTitle: "रक्षा ऐप",
+            rakshaTitle: "रक्षा",
+            rakshaSubtitle: "आपका सुरक्षा साथी - जब आपको सबसे ज्यादा जरूरत हो तो गुप्त मदद",
             setupTitle: "सुरक्षा कोड सेटअप",
             setupMessage: "आपातकालीन सुविधाओं तक पहुंचने के लिए 3-4 अंकों का सुरक्षा कोड दर्ज करें:",
             confirmCode: "अपने सुरक्षा कोड की पुष्टि करें:",
@@ -52,18 +54,18 @@ export function createViewModel() {
             confirmNewPassword: "नए पासवर्ड की पुष्टि करें:",
             passwordChanged: "पासवर्ड सफलतापूर्वक बदल दिया गया!",
             incorrectPassword: "गलत पासवर्ड। कृपया पुनः प्रयास करें।",
-            sosTitle: "सहायता मार्ग में है",
-            sosMessage: "आपातकालीन संपर्कों को आपके स्थान के साथ सूचित कर दिया गया है।",
+            sosTitle: "आपातकालीन अलर्ट भेजा गया",
+            sosMessage: "आपातकालीन संपर्कों को आपके स्थान के साथ सूचित कर दिया गया है। सहायता आ रही है।",
             ok: "ठीक है",
             back: "वापस",
             cancel: "रद्द करें",
-            emergencyContacts: "आपातकालीन संपर्क",
-            nearestShelters: "निकटतम आश्रय",
-            legalHelp: "कानूनी सहायता",
-            counselingServices: "परामर्श सेवाएं",
-            quickExit: "त्वरित बाहर निकलें",
-            quickExitInstruction: "ऐप को जल्दी बंद करने और छुपाने के लिए टैप करें",
-            emergencySOS: "आपातकालीन SOS",
+            emergencyContacts: "आपातकालीन\nसंपर्क",
+            nearestShelters: "निकटतम\nआश्रय",
+            legalHelp: "कानूनी\nसहायता",
+            counselingServices: "परामर्श\nसेवाएं",
+            quickExit: "त्वरित\nबाहर निकलें",
+            quickExitInstruction: "ऐप को तुरंत छुपाने और होम स्क्रीन पर वापस जाने के लिए त्वरित बाहर निकलें पर टैप करें",
+            emergencySOS: "आपातकालीन\nSOS",
             selectService: "सेवा का चयन करें",
             selectContact: "संपर्क चुनें",
             selectShelter: "आश्रय का चयन करें",
@@ -83,8 +85,8 @@ export function createViewModel() {
     viewModel.previousValue = "";
     viewModel.operator = "";
     viewModel.newNumber = true;
-    viewModel.showHelp = false;
     viewModel.showSettings = false;
+    viewModel.showRaksha = false;
     viewModel.isRakshaMode = false;
 
     // Secret code system with encryption
@@ -111,7 +113,7 @@ export function createViewModel() {
     if (viewModel.isFirstLaunch) {
         setTimeout(() => {
             setupSecretCode();
-        }, 500); // Reduced delay for faster startup
+        }, 1000);
     }
 
     // Setup secret code on first launch
@@ -166,7 +168,6 @@ export function createViewModel() {
     // Change password functionality
     viewModel.onChangePassword = async () => {
         try {
-            // Verify current password
             const currentResult = await Dialogs.prompt({
                 title: viewModel.t.changePassword,
                 message: viewModel.t.currentPassword,
@@ -188,7 +189,6 @@ export function createViewModel() {
                 return;
             }
 
-            // Get new password
             const newResult = await Dialogs.prompt({
                 title: viewModel.t.changePassword,
                 message: viewModel.t.newPassword,
@@ -200,7 +200,6 @@ export function createViewModel() {
 
             if (!newResult.result || !newResult.text || newResult.text.length < 3) return;
 
-            // Confirm new password
             const confirmResult = await Dialogs.prompt({
                 title: viewModel.t.changePassword,
                 message: viewModel.t.confirmNewPassword,
@@ -219,7 +218,6 @@ export function createViewModel() {
                 return;
             }
 
-            // Save new password
             const encrypted = encryptPassword(newResult.text);
             ApplicationSettings.setString("secretCode", encrypted);
             viewModel.secretCode = encrypted;
@@ -243,32 +241,29 @@ export function createViewModel() {
         viewModel.t = translations[newLang];
         ApplicationSettings.setString("language", newLang);
         
-        // Update observable properties
         viewModel.notifyPropertyChange("t", viewModel.t);
         viewModel.notifyPropertyChange("currentLanguage", newLang);
     };
 
-    // Optimized calculator functions
+    // Calculator functions - optimized
     viewModel.onNumber = (args) => {
         const number = args.object.text;
         
         // Track entered code for secret activation
         if (!viewModel.isRakshaMode) {
             enteredCode += number;
-            // Limit code length to prevent memory issues
             if (enteredCode.length > 10) {
                 enteredCode = enteredCode.slice(-10);
             }
         }
         
-        // Calculator logic - optimized
+        // Calculator logic
         if (viewModel.newNumber) {
             viewModel.set("display", number);
             viewModel.set("expression", number);
             viewModel.newNumber = false;
         } else {
             const newDisplay = viewModel.display === "0" ? number : viewModel.display + number;
-            // Limit display length for performance
             if (newDisplay.length <= 12) {
                 viewModel.set("display", newDisplay);
                 viewModel.set("expression", viewModel.expression + number);
@@ -290,12 +285,11 @@ export function createViewModel() {
             viewModel.newNumber = true;
         }
         
-        // Reset code tracking
         enteredCode = "";
     };
 
     viewModel.onEqual = () => {
-        // Check for secret code activation - single equals press
+        // Check for secret code activation
         if (!viewModel.isRakshaMode && enteredCode) {
             const currentDecrypted = decryptPassword(viewModel.secretCode);
             if (enteredCode === currentDecrypted) {
@@ -312,12 +306,31 @@ export function createViewModel() {
         enteredCode = "";
     };
 
+    viewModel.onPlusMinus = () => {
+        if (viewModel.display !== "0" && viewModel.display !== "Error") {
+            const value = parseFloat(viewModel.display);
+            const result = -value;
+            viewModel.set("display", result.toString());
+            viewModel.currentValue = result.toString();
+        }
+        enteredCode = "";
+    };
+
+    viewModel.onPercent = () => {
+        if (viewModel.display !== "0" && viewModel.display !== "Error") {
+            const value = parseFloat(viewModel.display);
+            const result = value / 100;
+            viewModel.set("display", result.toString());
+            viewModel.currentValue = result.toString();
+        }
+        enteredCode = "";
+    };
+
     function calculateResult() {
         try {
             const prev = parseFloat(viewModel.previousValue);
             const current = parseFloat(viewModel.currentValue);
             
-            // Check cache for performance
             const cacheKey = `${prev}_${viewModel.operator}_${current}`;
             if (calculationCache.has(cacheKey)) {
                 const result = calculationCache.get(cacheKey);
@@ -328,7 +341,7 @@ export function createViewModel() {
             let result = 0;
             switch (viewModel.operator) {
                 case "+": result = prev + current; break;
-                case "-": result = prev - current; break;
+                case "−": result = prev - current; break;
                 case "×": result = prev * current; break;
                 case "÷": 
                     if (current === 0) {
@@ -340,9 +353,7 @@ export function createViewModel() {
                     break;
             }
 
-            // Cache result for performance
             calculationCache.set(cacheKey, result);
-            // Limit cache size
             if (calculationCache.size > 100) {
                 const firstKey = calculationCache.keys().next().value;
                 calculationCache.delete(firstKey);
@@ -356,11 +367,9 @@ export function createViewModel() {
     }
 
     function displayResult(result) {
-        // Format result for display
         result = Math.round(result * 1000000000) / 1000000000;
         let resultStr = result.toString();
         
-        // Limit result length for display
         if (resultStr.length > 12) {
             resultStr = result.toExponential(6);
         }
@@ -395,34 +404,20 @@ export function createViewModel() {
         enteredCode = "";
     };
 
-    viewModel.onBackspace = () => {
-        if (viewModel.display.length > 1 && viewModel.display !== "0" && viewModel.display !== "Error") {
-            const newDisplay = viewModel.display.slice(0, -1);
-            viewModel.set("display", newDisplay);
-            viewModel.set("expression", viewModel.expression.slice(0, -1));
-            viewModel.currentValue = newDisplay;
-        } else {
-            viewModel.set("display", "0");
-            viewModel.set("expression", "");
-            viewModel.newNumber = true;
-        }
-    };
-
-    // Activate Raksha mode - optimized for instant activation
+    // Activate Raksha mode
     function activateRakshaMode() {
         viewModel.set("isRakshaMode", true);
-        viewModel.set("showHelp", true);
+        viewModel.set("showRaksha", true);
         
-        // Update title immediately
         viewModel.notifyPropertyChange("t", viewModel.t);
         
-        // Vibrate to confirm activation
+        // Haptic feedback
         if (Utils.android) {
             try {
                 const context = Utils.android.getActivity() || Utils.android.getApplicationContext();
                 const vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE);
                 if (vibrator) {
-                    vibrator.vibrate(200); // Shorter vibration for better UX
+                    vibrator.vibrate(300);
                 }
             } catch (error) {
                 console.log("Vibration not available");
@@ -440,7 +435,6 @@ export function createViewModel() {
         { name: "Child Helpline", nameHi: "बाल हेल्पलाइन", number: "1098" }
     ];
 
-    // Shelters by major cities
     const shelters = {
         "Delhi": [
             "Shakti Shalini - 24x7 Shelter (011-24373737)",
@@ -498,13 +492,13 @@ export function createViewModel() {
         ]
     };
 
-    // Safety Features - optimized
+    // Emergency functions
     viewModel.onSOS = async () => {
         try {
             const location = await getCurrentLocation({
                 desiredAccuracy: 3,
                 updateDistance: 10,
-                timeout: 10000 // Reduced timeout for faster response
+                timeout: 8000
             });
             
             console.log(`Emergency SOS activated at: ${location.latitude}, ${location.longitude}`);
@@ -525,7 +519,7 @@ export function createViewModel() {
     };
 
     viewModel.onQuickExit = () => {
-        viewModel.set("showHelp", false);
+        viewModel.set("showRaksha", false);
         viewModel.set("isRakshaMode", false);
         viewModel.onClear();
         
@@ -552,7 +546,7 @@ export function createViewModel() {
             title: viewModel.t.nearestShelters,
             message: viewModel.t.selectShelter,
             cancelButtonText: viewModel.t.back,
-            actions: shelterList.slice(0, 15) // Optimized list size
+            actions: shelterList.slice(0, 15)
         });
     };
 
